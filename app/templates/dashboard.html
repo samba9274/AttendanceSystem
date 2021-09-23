@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block content %}
+<nav class="p-3">
+  <span class="fs-5 text-capitalize">Hello, {{ name }} ({{ role }})</span>
+  <a href="/logout" class="float-end">Logout</a>
+</nav>
+<div class="row">
+  <div class="col"></div>
+  {% if role == 'admin' %}
+  <div class="col-8 rounded shadow my-5 p-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Attendance status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.name }}</td>
+          <td class="text-capitalize">{{ student.attendance }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %} {% if role == 'teacher' %}
+  <div class="col-8 rounded shadow my-5 p-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Attendance status</th>
+          <th scope="col">Accept</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.name }}</td>
+          <td class="text-capitalize">{{ student.attendance }}</td>
+          <td>
+            {% if student.attendance == 'requested' %}
+            <a href="/accept?email={{student.email}}" class="btn btn-primary">
+              Accept
+            </a>
+            {% else %}
+            <a
+              href="/accept?email={{student.email}}"
+              class="btn btn-primary disabled"
+            >
+              Accept
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %} {% if role == 'student' %}
+  <div class="col text-center rounded shadow my-5 p-4">
+    <h1 class="text-capitalize">
+      Attendance status<br />
+      <span class="badge bg-secondary">{{ attendance }}</span>
+    </h1>
+    {% if attendance == 'absent' %}
+    <a href="/request" class="btn btn-primary mt-3">Request Attendance</a>
+    {% else %}
+    <a href="/request" class="btn btn-primary mt-3 disabled">
+      Request Attendance
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="col"></div>
+</div>
+{% endblock content %}
